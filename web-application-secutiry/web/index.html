@@ -2,30 +2,26 @@
 
 <head>
     <title>This is a XSS attack</title>
-    
-    <script>
-    
-    	document.cookie = "secure_cookie=oeschger; SameSite=strict; Secure;";
-		document.cookie = "vulnerable_cookie=tripe; SameSite=strict; Secure";
-		document.cookie = "token=#@$#@$@;Secure;HttpOnly"
 
+    <script>
         function ready(fn) {
-            if (document.readyState != 'loading'){
+            if (document.readyState !== 'loading'){
                 fn();
             } else {
                 document.addEventListener('DOMContentLoaded', fn);
 
-                var request = new XMLHttpRequest();
-                request.open('GET', 'http://localhost:8080/api/user', true);
+                const request = new XMLHttpRequest();
+                request.open('GET', 'https://local.dev:5000/gateway/api/user', true);
+                request.withCredentials = true;
 
                 request.onload = function() {
                     if (this.status >= 200 && this.status < 400) {
                         // Success!
-                        var data = JSON.parse(this.response);
+                        const data = JSON.parse(this.response);
                         console.info("user list : ",data);
-                        
-                        var elementUserList = document.getElementById("user-list");
-                        
+
+                        const elementUserList = document.getElementById("user-list");
+
                         Array.prototype.forEach.call(data, function(el, i){
                             elementUserList.outerHTML = el.firstname + elementUserList.outerHTML;
                         });
@@ -40,18 +36,17 @@
                 };
 
                 request.send();
-
             }
         }
+
         ready();
+
     </script>
 </head>
 
 
 <body>
-    <div id="user-list">
-
-    </div>
+    <div id="user-list"></div>
 </body>
 
 </html>
