@@ -6,19 +6,21 @@ import com.tut.was.repository.UserRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.owasp.esapi.ESAPI;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/user")
 public class UserResource {
 
+    Logger logger = LoggerFactory.getLogger(UserResource.class);
     private final UserRepository userRepository;
 
     public UserResource(UserRepository userRepository) {
@@ -33,30 +35,33 @@ public class UserResource {
 
     @PostMapping("/raw")
     public User createUserRaw(@RequestBody User user) {
+        logger.debug("Request to create new raw user {}", user);
         return userRepository.save(user);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> allUser(HttpServletResponse response) {
+    public ResponseEntity<List<User>> allUser() {
 
-        // create a cookie
-        Cookie cookie = new Cookie("platform","mobile");
+        var responseHeaders = new HttpHeaders();
+        responseHeaders.set(HttpHeaders.SET_COOKIE,
+                createCookie().toString());
 
-        // expires in 7 days
-        cookie.setMaxAge(7 * 24 * 60 * 60);
-
-        // optional properties
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-
-        // add cookie to response
-        response.addCookie(cookie);
-
-        return new ResponseEntity<List<User>>(userRepository.findAll(), HttpStatus.OK);
-
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(userRepository.findAll());
     }
 
+    private ResponseCookie createCookie(){
+        return ResponseCookie
+                .from("token", "$%#^^#")
+                .path("/")
+                .sameSite("Strict")
+                .domain("local.dev")
+                .secure(true)
+                .httpOnly(true)
+                .maxAge(Duration.ofDays(1))
+                .build();
+    }
 
     private static String stripXSS(String value) {
         if (value == null) {
