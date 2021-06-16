@@ -33,3 +33,4 @@ Inject the sample code below to see how the XSS attack works
 - [Mozilla - Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)
 - [SameSite cookies explained](https://web.dev/samesite-cookies-explained/)
 - [Please Stop Using Local Storage](https://dev.to/rdegges/please-stop-using-local-storage-1i04)
+- [OWASP - HTML5 Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html#Local_Storage)
